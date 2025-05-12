@@ -1,0 +1,2 @@
+C:/Users/jm997/Desktop/S2AM/APPSMOBIL/Videojuego/android/app/.cxx/Debug/4g2a1n2d/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/jm997/Desktop/S2AM/APPSMOBIL/Videojuego/android/app/.cxx/Debug/4g2a1n2d/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -43,8 +43,9 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
 
     if (position.x < minX || position.x > maxX) {
       movingRight = !movingRight;
-    }
 
+      scale.x = movingRight ? -1 : 1;
+    }
     if (health <= 0) {
       isAlive = false;
       removeFromParent();

@@ -25,7 +25,7 @@ class PlanetPlatformerGame extends FlameGame
     // 🔹 Cargar y añadir el fondo
     final background = SpriteComponent()
       ..sprite = await Sprite.load('background.png')
-      ..size = Vector2(1500, 400)
+      ..size = Vector2(1635, 400)
       ..anchor = Anchor.topLeft
       ..priority = -1
       ..position = Vector2(-100, 0);
@@ -59,8 +59,6 @@ class PlanetPlatformerGame extends FlameGame
     camera.follow(player);
     add(camera);
   }
-
-
   @override
   Color backgroundColor() => const Color(0xFFECECEC);
 }

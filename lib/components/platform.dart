@@ -17,6 +17,6 @@ class PlatformBlock extends PositionComponent with CollisionCallbacks {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    //canvas.drawRect(size.toRect(), Paint()..color = Colors.brown);
+    canvas.drawRect(size.toRect(), Paint()..color = Colors.brown);
   }
 }

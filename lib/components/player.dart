@@ -52,6 +52,12 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     if (gameRef.leftPressed) velocity.x = -speed;
     if (gameRef.rightPressed) velocity.x = speed;
 
+    if (velocity.x < 0) {
+      scale.x = -1;
+    } else if (velocity.x > 0) {
+      scale.x = 1;
+    }
+
     if (gameRef.jumpPressed && onGround) {
       velocity.y = -jumpForce;
       onGround = false;

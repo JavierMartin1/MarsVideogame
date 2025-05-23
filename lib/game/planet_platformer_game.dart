@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -13,6 +14,8 @@ import '../helpers/constants.dart';
 class PlanetPlatformerGame extends FlameGame
     with HasCollisionDetection, HasKeyboardHandlerComponents {
   late Player player;
+  @override
+  late World world;
 
   bool leftPressed = false;
   bool rightPressed = false;
@@ -22,42 +25,52 @@ class PlanetPlatformerGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    // 🔹 Cargar y añadir el fondo
-    final background = SpriteComponent()
-      ..sprite = await Sprite.load('background.png')
-      ..size = Vector2(1635, 400)
-      ..anchor = Anchor.topLeft
-      ..priority = -1
-      ..position = Vector2(-100, 0);
+    //debugMode = true;
+    world = World();
+    add(world);
 
-    add(background);
+    // 🔹 Crear la cámara y seguir al jugador
+    final cameraComponent = CameraComponent(world: world)
+      ..viewfinder.anchor = Anchor.center
+      ..priority = 1;
+    add(cameraComponent);
+
+    // 🔹 Cargar y añadir el fondo
+    final sprite = await Sprite.load('background2.png');
+    final imageSize = sprite.srcSize;
+    final viewportSize = size;
+
+    final scaleX = viewportSize.x / imageSize.x;
+    final scaleY = viewportSize.y / imageSize.y;
+
+    final scale = max(scaleX, scaleY);
+
+    final background = SpriteComponent()
+      ..sprite = sprite
+      ..size = imageSize * scale
+      ..position = viewportSize / 2
+      ..anchor = Anchor.center;
+
+    world.add(background);
 
     // 🔹 Añadir jugador
     player = Player(gameRef: this)
-      ..position = Vector2(100, gameHeight - 150);
-    add(player);
+      ..position = Vector2(50, gameHeight - 195);
+    world.add(player);
 
     // 🔹 Añadir plataforma
-    add(PlatformBlock(
-      position: Vector2(0, gameHeight - 195),
-      size: Vector2(1000, 100),
+    world.add(PlatformBlock(
+      position: Vector2(0, gameHeight - 130),
+      size: Vector2(1540, 100),
     ));
 
     // 🔹 Añadir enemigo
-    add(Enemy(
-      position: Vector2(600, gameHeight - 220),
+    world.add(Enemy(
+      position: Vector2(600, gameHeight - 235),
       minX: 400,
       maxX: 600,
     ));
-
-    // 🔹 Cámara
-    final camera = CameraComponent.withFixedResolution(
-      width: size.x,
-      height: size.y,
-    )..viewfinder.anchor = Anchor.topLeft;
-
-    camera.follow(player);
-    add(camera);
+    cameraComponent.follow(player);
   }
   @override
   Color backgroundColor() => const Color(0xFFECECEC);

@@ -20,11 +20,11 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
     this.minX = 0,
     this.maxX = 800,
     this.movingRight = true,
-  }) : super(position: position, size: Vector2.all(50), anchor: Anchor.center);
+  }) : super(position: position, size: Vector2.all(80), anchor: Anchor.center);
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('enemy.png');
+    sprite = await Sprite.load('enemy1.png');
     anchor = Anchor.center;
     add(RectangleHitbox.relative(
       Vector2(0.7, 0.8),

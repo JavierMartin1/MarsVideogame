@@ -31,16 +31,16 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   @override
   Future<void> onLoad() async {
     try {
-      idleSprite = await Sprite.load('player.png');
+      idleSprite = await Sprite.load('player1.png');
       attackSprite = await Sprite.load('player_attack.png');
     } catch (e) {
       print('❌ Error cargando sprites del player: $e');
     }
 
     add(RectangleHitbox.relative(
-      Vector2(0.7, 0.8),
+      Vector2(1, 1),
       parentSize: size,
-      position: Vector2(0, 5),
+      position: Vector2(0, 0),
     ));
   }
 
@@ -159,7 +159,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     if (other is PlatformBlock && velocity.y >= 0) {
       onGround = true;
       velocity.y = 0;
-      position.y = other.position.y - (height / 2) + 5;
+      position.y = other.position.y - (height / 2);
     }
     super.onCollision(intersectionPoints, other);
   }

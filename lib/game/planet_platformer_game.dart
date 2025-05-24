@@ -9,6 +9,7 @@ import '../components/player.dart';
 import '../components/platform.dart';
 import '../components/enemy.dart';
 
+import '../components/score_text.dart';
 import '../helpers/constants.dart';
 
 class PlanetPlatformerGame extends FlameGame
@@ -17,6 +18,7 @@ class PlanetPlatformerGame extends FlameGame
   @override
   late World world;
 
+  int enemiesKilled = 0;
   bool leftPressed = false;
   bool rightPressed = false;
   bool jumpPressed = false;
@@ -29,49 +31,62 @@ class PlanetPlatformerGame extends FlameGame
     world = World();
     add(world);
 
-    // 🔹 Crear la cámara y seguir al jugador
+    //Cargar y añadir el fondo
+    final sprite = await Sprite.load('background2.png');
+    final worldSize = Vector2(gameWidth, gameHeight);
+
+    const backgroundMargin = 0.55;
+    final backgroundSize = worldSize * (1 + backgroundMargin * 2); // adds margin on all sides
+
+    final background = SpriteComponent()
+      ..sprite = sprite
+      ..size = backgroundSize
+      ..position = worldSize * -backgroundMargin
+      ..anchor = Anchor.topLeft;
+    world.add(background);
+
+    //Crear la cámara y seguir al jugador
     final cameraComponent = CameraComponent(world: world)
       ..viewfinder.anchor = Anchor.center
       ..priority = 1;
     add(cameraComponent);
 
-    // 🔹 Cargar y añadir el fondo
-    final sprite = await Sprite.load('background2.png');
-    final imageSize = sprite.srcSize;
-    final viewportSize = size;
-
-    final scaleX = viewportSize.x / imageSize.x;
-    final scaleY = viewportSize.y / imageSize.y;
-
-    final scale = max(scaleX, scaleY);
-
-    final background = SpriteComponent()
-      ..sprite = sprite
-      ..size = imageSize * scale
-      ..position = viewportSize / 2
-      ..anchor = Anchor.center;
-
-    world.add(background);
-
-    // 🔹 Añadir jugador
+    //Añadir jugador
     player = Player(gameRef: this)
-      ..position = Vector2(50, gameHeight - 195);
+      ..position = Vector2(100, playerStartHeight)
+      ..priority = 10;
     world.add(player);
 
-    // 🔹 Añadir plataforma
+    //Añadir plataforma general
     world.add(PlatformBlock(
-      position: Vector2(0, gameHeight - 130),
-      size: Vector2(1540, 100),
+      position: Vector2(0, playerStartHeight),
+      size: Vector2(gameWidth, 10),
     ));
 
-    // 🔹 Añadir enemigo
-    world.add(Enemy(
-      position: Vector2(600, gameHeight - 235),
-      minX: 400,
-      maxX: 600,
-    ));
+    //Añadir enemigos
+    for(Vector2 v in enemies){
+      world.add(Enemy(
+        gameRef: this,
+        position: v,
+        minX: v.x,
+        maxX: v.x + 200,
+      ));
+      world.add(PlatformBlock(
+          position: Vector2(v.x - 50, v.y),
+          size: Vector2(300, 100),
+          useImage: true
+      ));
+      add(ScoreText(this));
+    }
+
     cameraComponent.follow(player);
   }
+
+  void onEnemyKilled(){
+    enemiesKilled++;
+    print(enemiesKilled);
+  }
+
   @override
   Color backgroundColor() => const Color(0xFFECECEC);
 }

@@ -17,7 +17,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   bool onGround = false;
   double lastDamageTime = 0; // en segundos
   final double damageCooldown = 1.0;
-  final double jumpForce;
+  final double jumpForce = jumpForceCst;
   
   Sprite? idleSprite;
   Sprite? attackSprite;
@@ -25,13 +25,13 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   int health = 5;
   bool isAttacking = false;
 
-  Player({required this.gameRef, this.jumpForce = 300})
-      : super(size: Vector2.all(50), anchor: Anchor.center);
+  Player({required this.gameRef})
+      : super(size: Vector2.all(80), anchor: Anchor.center);
 
   @override
   Future<void> onLoad() async {
     try {
-      idleSprite = await Sprite.load('player1.png');
+      idleSprite = await Sprite.load('player.png');
       attackSprite = await Sprite.load('player_attack.png');
     } catch (e) {
       print('❌ Error cargando sprites del player: $e');
@@ -47,7 +47,10 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   @override
   void update(double dt) {
     super.update(dt);
+    final min = Vector2(100, 0);
+    final max = Vector2(gameWidth, gameHeight) - size;
 
+    position.clamp(min, max);
     velocity.x = 0;
     if (gameRef.leftPressed) velocity.x = -speed;
     if (gameRef.rightPressed) velocity.x = speed;
@@ -88,7 +91,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   }
 
   void attackEnemyNearby() {
-    final enemies = gameRef.children.whereType<Enemy>();
+    final enemies = gameRef.world.children.whereType<Enemy>();
     for (final enemy in enemies) {
       final distance = (enemy.position - position).length;
       if (distance < 60 && enemy.health > 0) {
@@ -121,19 +124,19 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
       canvas.drawRect(size.toRect(), Paint()..color = const Color(0xFF00FF00));
     }
 
-    // 🔴 Dibujar barra de vida
+    //Dibujar barra de vida
     const barHeight = 5.0;
-    const barWidth = 40.0;
+    const barWidth = 50.0;
     final healthRatio = health / 5;
     final paintBg = Paint()..color = const Color(0xFF444444);
     final paintHealth = Paint()..color = const Color(0xFF43a047);
 
     canvas.drawRect(
-      Rect.fromLTWH(-barWidth / 2 + 20, -size.y / 2, barWidth, barHeight),
+      Rect.fromLTWH(-barWidth / 2 + 30, -size.y / 3, barWidth, barHeight),
       paintBg,
     );
     canvas.drawRect(
-      Rect.fromLTWH(-barWidth / 2 + 20, -size.y / 2, barWidth * healthRatio, barHeight),
+      Rect.fromLTWH(-barWidth / 2 + 30, -size.y / 3, barWidth * healthRatio, barHeight),
       paintHealth,
     );
   }
@@ -156,12 +159,13 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
     if (other is PlatformBlock && velocity.y >= 0) {
+      final platformHitboxTop = other.position.y + (other.size.y / 4) + 10;
       onGround = true;
       velocity.y = 0;
-      position.y = other.position.y - (height / 2);
+      position.y = platformHitboxTop - (height / 2);
     }
-    super.onCollision(intersectionPoints, other);
   }
 
   @override

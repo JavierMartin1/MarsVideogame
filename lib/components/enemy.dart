@@ -2,10 +2,13 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
+import '../game/planet_platformer_game.dart';
 import '../helpers/constants.dart';
 import 'player.dart';
 
 class Enemy extends SpriteComponent with CollisionCallbacks {
+  final PlanetPlatformerGame gameRef;
+
   final double speed;
   final double minX;
   final double maxX;
@@ -16,6 +19,7 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
 
   Enemy({
     required Vector2 position,
+    required this.gameRef,
     this.speed = 80,
     this.minX = 0,
     this.maxX = 800,
@@ -29,7 +33,7 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
     add(RectangleHitbox.relative(
       Vector2(0.7, 0.8),
       parentSize: size,
-      position: Vector2(0, 5),
+      position: Vector2(0, 0),
     ));
   }
 
@@ -49,6 +53,7 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
     if (health <= 0) {
       isAlive = false;
       removeFromParent();
+      gameRef.onEnemyKilled();
       print('💀 Enemy eliminado');
     }
   }
@@ -57,20 +62,19 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
   void render(Canvas canvas) {
     super.render(canvas);
 
-    // 🔴 Dibujar barra de vida encima del enemigo
+    //Dibujar barra de vida encima del enemigo
     const barHeight = 5.0;
-    const barWidth = 40.0;
+    const barWidth = 50.0;
     final healthRatio = health / 3;
     final paintBg = Paint()..color = const Color(0xFF444444);
     final paintHealth = Paint()..color = const Color(0xFFe53935);
 
     canvas.drawRect(
-      Rect.fromLTWH(-barWidth / 2+25, -size.y / 2, barWidth, barHeight),
+      Rect.fromLTWH(-barWidth / 2 + 30, -size.y / 3, barWidth, barHeight),
       paintBg,
     );
-
     canvas.drawRect(
-      Rect.fromLTWH(-barWidth / 2+25, -size.y / 2, barWidth * healthRatio, barHeight),
+      Rect.fromLTWH(-barWidth / 2 + 30, -size.y / 3, barWidth * healthRatio, barHeight),
       paintHealth,
     );
   }

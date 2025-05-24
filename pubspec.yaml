@@ -26,4 +26,5 @@ flutter:
     - assets/images/enemy1.png
     - assets/images/background.png
     - assets/images/background2.png
+    - assets/images/platform.png
     - assets/images/player_attack.png

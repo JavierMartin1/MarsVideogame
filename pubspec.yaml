@@ -29,5 +29,6 @@ flutter:
     - assets/images/background2.png
     - assets/images/platform.png
     - assets/images/player_attack.png
+    - assets/images/player_walk.png
     - assets/images/goal_marker.png
     - assets/music/background_music.mp3

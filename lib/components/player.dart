@@ -22,9 +22,15 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   
   Sprite? idleSprite;
   Sprite? attackSprite;
+  Sprite? walkSprite;
 
   int health = 5;
   bool isAttacking = false;
+  bool isWalking = false;
+
+  double walkAnimationTimer = 0;
+  bool showWalkSprite = false;
+  final double walkAnimationInterval = 0.25;
 
   Player({required this.gameRef})
       : super(size: Vector2.all(80), anchor: Anchor.center);
@@ -34,6 +40,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     try {
       idleSprite = await Sprite.load('player.png');
       attackSprite = await Sprite.load('player_attack.png');
+      walkSprite = await Sprite.load('player_walk.png');
     } catch (e) {
       print('❌ Error cargando sprites del player: $e');
     }
@@ -55,6 +62,19 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     velocity.x = 0;
     if (gameRef.leftPressed) velocity.x = -speed;
     if (gameRef.rightPressed) velocity.x = speed;
+
+    isWalking = velocity.x != 0;
+
+    if (isWalking) {
+      walkAnimationTimer += dt;
+      if (walkAnimationTimer >= walkAnimationInterval) {
+        walkAnimationTimer = 0;
+        showWalkSprite = !showWalkSprite;
+      }
+    } else {
+      walkAnimationTimer = 0;
+      showWalkSprite = false;
+    }
 
     if (velocity.x < 0) {
       scale.x = -1;
@@ -119,7 +139,15 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   void render(Canvas canvas) {
     super.render(canvas);
 
-    final spriteToRender = isAttacking ? attackSprite : idleSprite;
+    Sprite? spriteToRender;
+
+    if (isAttacking) {
+      spriteToRender = attackSprite;
+    } else if (isWalking) {
+      spriteToRender = showWalkSprite ? walkSprite : idleSprite;
+    } else {
+      spriteToRender = idleSprite;
+    }
     if (spriteToRender != null) {
       spriteToRender.render(canvas, size: size);
     } else {

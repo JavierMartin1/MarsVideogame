@@ -81,9 +81,9 @@ class Enemy extends SpriteComponent with CollisionCallbacks {
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
     if (other is Player) {
       other.receiveDamage();
     }
-    super.onCollision(intersectionPoints, other);
   }
 }

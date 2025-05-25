@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import 'package:flutter/services.dart';
+import 'package:videojuego/components/goal_marker.dart';
 
 import '../helpers/constants.dart';
 import '../game/planet_platformer_game.dart';
@@ -87,11 +88,12 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     if (health <= 0) {
       print("💀 Player muerto");
       removeFromParent();
+      gameRef.showGameOver();
     }
   }
 
   void attackEnemyNearby() {
-    final enemies = gameRef.world.children.whereType<Enemy>();
+    final enemies = gameRef.activeEnemies;
     for (final enemy in enemies) {
       final distance = (enemy.position - position).length;
       if (distance < 60 && enemy.health > 0) {
@@ -165,6 +167,12 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
       onGround = true;
       velocity.y = 0;
       position.y = platformHitboxTop - (height / 2);
+    }
+    else if (other is GoalMarker){
+      if(gameRef.world.children.whereType<Enemy>().isEmpty){
+        gameRef.advanceLevel();
+        print("a");
+      }
     }
   }
 

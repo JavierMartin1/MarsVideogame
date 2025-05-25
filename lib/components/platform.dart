@@ -32,10 +32,6 @@ class PlatformBlock extends PositionComponent with CollisionCallbacks {
     super.render(canvas);
     if(useImage){
      _sprite!.render(canvas, size: size);
-
-    }
-    else{
-      canvas.drawRect(size.toRect(), Paint()..color = Colors.brown);
     }
   }
 }

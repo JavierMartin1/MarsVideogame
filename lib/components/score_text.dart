@@ -9,7 +9,7 @@ class ScoreText extends TextComponent {
       : super(
     text: 'Kills: 0',
     anchor: Anchor.topRight,
-    position: Vector2(0, 10), // will update X in onGameResize
+    position: Vector2(0, 30),
     textRenderer: TextPaint(
       style: const TextStyle(
         fontSize: 24,
@@ -32,6 +32,6 @@ class ScoreText extends TextComponent {
     super.onGameResize(size);
 
     // Position in top-right corner, with 10 pixels padding from right edge
-    position = Vector2(size.x - 10, 10);
+    position = Vector2(size.x - 30, 30);
   }
 }

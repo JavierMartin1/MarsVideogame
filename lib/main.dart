@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flame/game.dart';
+import 'game/game_over_menu.dart';
+import 'game/pause_menu.dart';
 import 'game/planet_platformer_game.dart';
+import 'game/start_menu.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,48 +22,97 @@ void main() async {
       home: Scaffold(
         body: Stack(
           children: [
-            GameWidget(game: game),
-            Positioned(
-              bottom: 30,
-              left: 30,
-              child: Row(
-                children: [
-                  // Botón izquierda
-                  _GameButton(
-                    icon: Icons.arrow_left,
-                    onPressed: () => game.leftPressed = true,
-                    onReleased: () => game.leftPressed = false,
-                  ),
-                  const SizedBox(width: 20),
-                  // Botón derecha
-                  _GameButton(
-                    icon: Icons.arrow_right,
-                    onPressed: () => game.rightPressed = true,
-                    onReleased: () => game.rightPressed = false,
-                  ),
-                ],
-              ),
+            GameWidget(
+              game: game,
+              overlayBuilderMap: {
+                'StartMenu': (context, game) => StartMenu(game: game as PlanetPlatformerGame),
+                'GameOver': (context, game) => GameOverMenu(game: game as PlanetPlatformerGame),
+                'PauseMenu': (context, game) => PauseMenu(game: game as PlanetPlatformerGame),
+              },
+              initialActiveOverlays: const ['StartMenu'],
             ),
-            Positioned(
-              bottom: 30,
-              right: 30,
-              child: Row(
+            ValueListenableBuilder<bool>(
+            valueListenable: game.isPlaying,
+            builder: (context, isPlaying, child) {
+              if (!isPlaying) return const SizedBox.shrink();
+              return Stack(
                 children: [
-                  // Botón de salto
-                  _GameButton(
-                    icon: Icons.arrow_upward,
-                    onPressed: () => game.jumpPressed = true,
-                    onReleased: () => game.jumpPressed = false,
+                  Positioned(
+                    bottom: 30,
+                    left: 30,
+                    child: Row(
+                      children: [
+                        // Botón izquierda
+                        _GameButton(
+                          icon: Icons.arrow_left,
+                          onPressed: () => game.leftPressed = true,
+                          onReleased: () => game.leftPressed = false,
+                        ),
+                        const SizedBox(width: 20),
+                        // Botón derecha
+                        _GameButton(
+                          icon: Icons.arrow_right,
+                          onPressed: () => game.rightPressed = true,
+                          onReleased: () => game.rightPressed = false,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 20),
-                  // Botón de ataque
-                  _GameButton(
-                    icon: Icons.gavel,
-                    onPressed: () => game.attackPressed = true,
-                    onReleased: () => game.attackPressed = false,
+                  Positioned(
+                    bottom: 30,
+                    right: 30,
+                    child: Row(
+                      children: [
+                        // Botón de salto
+                        _GameButton(
+                          icon: Icons.arrow_upward,
+                          onPressed: () => game.jumpPressed = true,
+                          onReleased: () => game.jumpPressed = false,
+                        ),
+                        const SizedBox(width: 20),
+                        // Botón de ataque
+                        _GameButton(
+                          icon: Icons.gavel,
+                          onPressed: () => game.attackPressed = true,
+                          onReleased: () => game.attackPressed = false,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 30,
+                    left: 30,
+                    child: Row(
+                      children:
+                      [
+                        _GameButton(
+                          icon: Icons.refresh,
+                          onPressed: () => game.startGame(),
+                          onReleased: () {},
+                        ),
+                        const SizedBox(width: 20),
+                        _GameButton(
+                          icon: Icons.pause,
+                          onPressed: () {
+                            game.pauseEngine();
+                            game.overlays.add('PauseMenu');
+                          },
+                          onReleased: () {},
+                        ),
+                        const SizedBox(width: 20),
+                        _GameButton(
+                          icon: Icons.home,
+                          onPressed: () {
+                            game.pauseEngine();
+                            game.overlays.add('StartMenu');
+                          },
+                          onReleased: () {},
+                        ),
+                      ]
+                    ),
                   ),
                 ],
-              ),
+              );},
             ),
           ],
         ),

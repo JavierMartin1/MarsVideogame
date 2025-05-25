@@ -1,10 +1,11 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 
+import 'package:flutter/cupertino.dart';
+
+import '../components/goal_marker.dart';
 import '../components/player.dart';
 import '../components/platform.dart';
 import '../components/enemy.dart';
@@ -17,8 +18,13 @@ class PlanetPlatformerGame extends FlameGame
   late Player player;
   @override
   late World world;
+  final ValueNotifier<bool> isPlaying = ValueNotifier(false);
+  final ValueNotifier<bool> soundOn = ValueNotifier(true);
 
   int enemiesKilled = 0;
+  int level = 0;
+  final List<Enemy> activeEnemies = [];
+
   bool leftPressed = false;
   bool rightPressed = false;
   bool jumpPressed = false;
@@ -27,7 +33,20 @@ class PlanetPlatformerGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    //debugMode = true;
+   // debugMode = true;
+    await FlameAudio.audioCache.load('background_music.mp3');
+    if(soundOn.value){
+      FlameAudio.bgm.play('background_music.mp3');
+    }
+
+    world = World();
+    add(world);
+
+    pauseEngine(); // Prevents auto-update
+    overlays.add('StartMenu');
+  }
+
+  void loadWorld() async{
     world = World();
     add(world);
 
@@ -64,29 +83,65 @@ class PlanetPlatformerGame extends FlameGame
     ));
 
     //Añadir enemigos
+    addEnemies(level);
+    add(ScoreText(this));
+
+    final goal = GoalMarker(position: Vector2(gameWidth - 200, playerStartHeight));
+    world.add(goal);
+
+    cameraComponent.follow(player);
+  }
+
+  void addEnemies(int level){
+    activeEnemies.clear();
     for(Vector2 v in enemies){
-      world.add(Enemy(
+      final enemy = Enemy(
         gameRef: this,
         position: v,
         minX: v.x,
         maxX: v.x + 200,
-      ));
+      );
+      world.add(enemy);
+      activeEnemies.add(enemy);
+
       world.add(PlatformBlock(
           position: Vector2(v.x - 50, v.y),
           size: Vector2(300, 100),
           useImage: true
       ));
-      add(ScoreText(this));
     }
-
-    cameraComponent.follow(player);
   }
 
   void onEnemyKilled(){
     enemiesKilled++;
-    print(enemiesKilled);
   }
 
   @override
   Color backgroundColor() => const Color(0xFFECECEC);
+
+  void startGame() {
+    isPlaying.value = true;
+    world.removeFromParent();
+    loadWorld();
+    resumeEngine();
+    overlays.remove('StartMenu');
+    overlays.remove('GameOver');
+    overlays.remove('PauseMenu');
+
+    level = 0;
+    enemiesKilled = 0;
+  }
+
+  void advanceLevel(){
+    level++;
+    player.position = Vector2(100, playerStartHeight);
+    player.health = 5;
+    addEnemies(level);
+  }
+
+  void showGameOver(){
+    isPlaying.value = false;
+    pauseEngine();
+    overlays.add('GameOver');
+  }
 }

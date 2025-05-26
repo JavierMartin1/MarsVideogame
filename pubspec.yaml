@@ -31,4 +31,6 @@ flutter:
     - assets/images/player_attack.png
     - assets/images/player_walk.png
     - assets/images/goal_marker.png
-    - assets/music/background_music.mp3
+    - assets/audio/background_music.mp3
+    - assets/images/platform_enemy.png
+    - assets/images/platform_ground.png

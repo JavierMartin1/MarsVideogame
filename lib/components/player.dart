@@ -19,7 +19,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   double lastDamageTime = 0; // en segundos
   final double damageCooldown = 1.0;
   final double jumpForce = jumpForceCst;
-  
+
   Sprite? idleSprite;
   Sprite? attackSprite;
   Sprite? walkSprite;
@@ -33,7 +33,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   final double walkAnimationInterval = 0.25;
 
   Player({required this.gameRef})
-      : super(size: Vector2.all(80), anchor: Anchor.center);
+      : super(size: Vector2(120, 80), anchor: Anchor.bottomCenter);
 
   @override
   Future<void> onLoad() async {
@@ -100,11 +100,11 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     velocity.y += gravity * dt;
     position += velocity * dt;
 
-    if (position.y > gameRef.size.y) {
-      position.y = gameRef.size.y - 100;
+    if (position.y > playerStartHeight) {
+      position.y = playerStartHeight;
       velocity.y = 0;
+      onGround = true;
     }
-
     if (health <= 0) {
       print("💀 Player muerto");
       removeFromParent();
@@ -130,8 +130,6 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
       health -= 1;
       lastDamageTime = now;
       print('🛑 Player golpeado. Vida restante: $health');
-    } else {
-      // Está en cooldown, no se aplica daño
     }
   }
 
@@ -191,15 +189,13 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is PlatformBlock && velocity.y >= 0) {
-      final platformHitboxTop = other.position.y + (other.size.y / 4) + 10;
       onGround = true;
       velocity.y = 0;
-      position.y = platformHitboxTop - (height / 2);
+      position.y = other.position.y;
     }
     else if (other is GoalMarker){
       if(gameRef.world.children.whereType<Enemy>().isEmpty){
         gameRef.advanceLevel();
-        print("a");
       }
     }
   }

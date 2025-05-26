@@ -33,10 +33,9 @@ class PlanetPlatformerGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-   // debugMode = true;
-    await FlameAudio.audioCache.load('background_music.mp3');
+    debugMode = true;
     if(soundOn.value){
-      FlameAudio.bgm.play('background_music.mp3');
+      FlameAudio.bgm.play('background_music.mp3', volume: 0.6);
     }
 
     world = World();
@@ -79,14 +78,15 @@ class PlanetPlatformerGame extends FlameGame
     //Añadir plataforma general
     world.add(PlatformBlock(
       position: Vector2(0, playerStartHeight),
-      size: Vector2(gameWidth, 10),
+      size: Vector2(gameWidth, 60),
+     // image: 'platform_ground.png',
     ));
 
     //Añadir enemigos
     addEnemies(level);
     add(ScoreText(this));
 
-    final goal = GoalMarker(position: Vector2(gameWidth - 200, playerStartHeight));
+    final goal = GoalMarker(position: Vector2(gameWidth - 200, playerStartHeight - 85));
     world.add(goal);
 
     cameraComponent.follow(player);
@@ -105,9 +105,9 @@ class PlanetPlatformerGame extends FlameGame
       activeEnemies.add(enemy);
 
       world.add(PlatformBlock(
-          position: Vector2(v.x - 50, v.y),
-          size: Vector2(300, 100),
-          useImage: true
+          position: Vector2(v.x - 50, v.y + 40),
+          size: Vector2(300, 60),
+          image: 'platform_enemy.png'
       ));
     }
   }
@@ -143,5 +143,11 @@ class PlanetPlatformerGame extends FlameGame
     isPlaying.value = false;
     pauseEngine();
     overlays.add('GameOver');
+  }
+
+  void showStartMenu(){
+    isPlaying.value = false;
+    pauseEngine();
+    overlays.add('StartMenu');
   }
 }

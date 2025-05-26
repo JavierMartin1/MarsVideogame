@@ -54,6 +54,8 @@ class StartMenu extends StatelessWidget {
                     game.soundOn.value = !soundOn;
                     if (!game.soundOn.value) {
                       FlameAudio.bgm.stop();
+                    } else {
+                      FlameAudio.bgm.resume();
                     }
                   },
                   icon: Icon(

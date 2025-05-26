@@ -103,8 +103,7 @@ void main() async {
                         _GameButton(
                           icon: Icons.home,
                           onPressed: () {
-                            game.pauseEngine();
-                            game.overlays.add('StartMenu');
+                            game.showStartMenu();
                           },
                           onReleased: () {},
                         ),

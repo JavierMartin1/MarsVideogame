@@ -5,7 +5,7 @@ class GoalMarker extends SpriteComponent with CollisionCallbacks {
   GoalMarker({required Vector2 position})
       : super(
     position: position,
-    size: Vector2(64, 64),
+    size: Vector2(100, 200),
     anchor: Anchor.center,
   );
 

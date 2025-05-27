@@ -81,7 +81,7 @@ class PlanetPlatformerGame extends FlameGame
     // Añadir plataforma general
     world.add(PlatformBlock(
       position: Vector2(0, playerStartHeight),
-      size: Vector2(gameWidth, 60),
+      size: Vector2(gameWidth, 90),
       image: 'platform_ground.png',
     ));
 

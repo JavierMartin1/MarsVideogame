@@ -46,9 +46,9 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     }
 
     add(RectangleHitbox.relative(
-      Vector2(1, 1.0), // 75% del ancho total
+      Vector2(0.67, 1.0),
       parentSize: size,
-      position: Vector2(0.0, 0.0), // comienza desde el borde izquierdo
+      position: Vector2(40.0, 0.0),
     ));
 
   }

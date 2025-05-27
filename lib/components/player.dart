@@ -17,14 +17,14 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
   Vector2 velocity = Vector2.zero();
   bool onGround = false;
   double lastDamageTime = 0; // en segundos
-  final double damageCooldown = 1.0;
+  final double damageCooldown = 1.4 ;
   final double jumpForce = jumpForceCst;
 
   Sprite? idleSprite;
   Sprite? attackSprite;
   Sprite? walkSprite;
 
-  int health = 5;
+  double health = 10;
   bool isAttacking = false;
   bool isWalking = false;
 
@@ -46,10 +46,11 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     }
 
     add(RectangleHitbox.relative(
-      Vector2(1, 1),
+      Vector2(1, 1.0), // 75% del ancho total
       parentSize: size,
-      position: Vector2(0, 0),
+      position: Vector2(0.0, 0.0), // comienza desde el borde izquierdo
     ));
+
   }
 
   @override
@@ -126,9 +127,9 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
 
   void receiveDamage() {
     final now = gameRef.currentTime(); // Obtén el tiempo actual del juego
-
+    double levelMult = gameRef.level + gameRef.level*0.25;
     if (now - lastDamageTime >= damageCooldown) {
-      health -= 1;
+      health -= 1*levelMult;
       lastDamageTime = now;
       print('🛑 Player golpeado. Vida restante: $health');
     }
@@ -156,7 +157,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
     //Dibujar barra de vida
     const barHeight = 5.0;
     const barWidth = 50.0;
-    final healthRatio = health / 5;
+    final healthRatio = health / 10;
     final paintBg = Paint()..color = const Color(0xFF444444);
     final paintHealth = Paint()..color = const Color(0xFF43a047);
 

@@ -96,6 +96,7 @@ void main() async {
                           onPressed: () {
                             game.pauseEngine();
                             game.overlays.add('PauseMenu');
+                            game.isPlaying.value = false;
                           },
                           onReleased: () {},
                         ),

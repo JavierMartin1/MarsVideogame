@@ -2,20 +2,26 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:videojuego/game/planet_platformer_game.dart';
 
-class ScoreText extends TextComponent {
+class LevelText extends TextComponent {
   final PlanetPlatformerGame gameRef;
 
-  ScoreText(this.gameRef)
+  LevelText(this.gameRef)
       : super(
-    text: 'Kills: 0',
+    text: 'Nivel: 1',
     anchor: Anchor.topRight,
-    position: Vector2(0, 60),
+    position: Vector2(0, 30),
     textRenderer: TextPaint(
       style: const TextStyle(
         fontSize: 24,
         color: Colors.white,
         fontWeight: FontWeight.bold,
-        shadows: [Shadow(blurRadius: 2, color: Colors.black, offset: Offset(1, 1))],
+        shadows: [
+          Shadow(
+            blurRadius: 2,
+            color: Colors.black,
+            offset: Offset(1, 1),
+          ),
+        ],
       ),
     ),
     priority: 100,
@@ -23,15 +29,13 @@ class ScoreText extends TextComponent {
 
   @override
   void update(double dt) {
-    text = 'Kills: ${gameRef.enemiesKilled}';
+    text = 'Nivel: ${gameRef.level}';
     super.update(dt);
   }
 
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-
-    // Position in top-right corner, with 10 pixels padding from right edge
-    position = Vector2(size.x - 30, 60);
+    position = Vector2(size.x - 30, 30);
   }
 }

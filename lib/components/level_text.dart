@@ -7,7 +7,7 @@ class LevelText extends TextComponent {
 
   LevelText(this.gameRef)
       : super(
-    text: 'Level: 1',
+    text: 'Level 1',
     anchor: Anchor.topRight,
     position: Vector2(0, 30),
     textRenderer: TextPaint(
@@ -29,7 +29,7 @@ class LevelText extends TextComponent {
 
   @override
   void update(double dt) {
-    text = 'Nivel: ${gameRef.level}';
+    text = 'Level ${gameRef.level}';
     super.update(dt);
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:videojuego/game/planet_platformer_game.dart';
 
 class PauseMenu extends StatelessWidget {
@@ -12,33 +13,34 @@ class PauseMenu extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withOpacity(0.8),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Paused',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+              style: GoogleFonts.unifrakturCook(
+                textStyle: const TextStyle(fontSize: 24, color: Color(0xFF9B2015), fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                game.isPlaying.value = true;
                 game.resumeEngine();
                 game.overlays.remove('PauseMenu');
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: const Color(0xFF5F5F5F).withOpacity(0.8),
               ),
-              child: const Text(
+              child: Text(
                   'Resume',
-                style: TextStyle(fontSize: 20, color: Colors.black87),
+                style: GoogleFonts.unifrakturCook(
+                  textStyle: const TextStyle(fontSize: 24, color: Color(0xFF9B2015)),
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -49,11 +51,13 @@ class PauseMenu extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: const Color(0xFF5F5F5F).withOpacity(0.8),
               ),
-              child: const Text(
+              child: Text(
                   'Restart',
-                  style: TextStyle(fontSize: 20, color: Colors.black87),
+                style: GoogleFonts.unifrakturCook(
+                  textStyle: const TextStyle(fontSize: 24, color: Color(0xFF9B2015)),
+                ),
               ),
             ),
           ],

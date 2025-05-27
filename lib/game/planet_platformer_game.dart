@@ -36,7 +36,7 @@ class PlanetPlatformerGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    debugMode = true;
+    //debugMode = true;
     if (soundOn.value) {
       FlameAudio.bgm.play('background_music.mp3', volume: 0.7);
     }

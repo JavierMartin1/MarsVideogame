@@ -31,7 +31,6 @@ class ScoreText extends TextComponent {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
 
-    // Position in top-right corner, with 10 pixels padding from right edge
     position = Vector2(size.x - 30, 60);
   }
 }

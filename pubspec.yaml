@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flame: ^1.24.0
   flame_audio: ^2.11.6
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -34,3 +35,4 @@ flutter:
     - assets/audio/background_music.mp3
     - assets/images/platform_enemy.png
     - assets/images/platform_ground.png
+    - assets/images/icon.png

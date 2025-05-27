@@ -79,7 +79,7 @@ class PlanetPlatformerGame extends FlameGame
     world.add(PlatformBlock(
       position: Vector2(0, playerStartHeight),
       size: Vector2(gameWidth, 60),
-     // image: 'platform_ground.png',
+      image: 'platform_ground.png',
     ));
 
     //Añadir enemigos

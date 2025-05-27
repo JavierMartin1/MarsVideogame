@@ -60,9 +60,10 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
 
     position.clamp(min, max);
     velocity.x = 0;
-    if (gameRef.leftPressed) velocity.x = -speed;
-    if (gameRef.rightPressed) velocity.x = speed;
-
+    if (!gameRef.attackPressed) {
+      if (gameRef.leftPressed) velocity.x = -speed;
+      if (gameRef.rightPressed) velocity.x = speed;
+    }
     isWalking = velocity.x != 0;
 
     if (isWalking) {

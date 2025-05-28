@@ -127,7 +127,7 @@ class Player extends PositionComponent with CollisionCallbacks, KeyboardHandler 
 
   void receiveDamage() {
     final now = gameRef.currentTime(); // Obtén el tiempo actual del juego
-    double levelMult = gameRef.level + gameRef.level*0.25;
+    double levelMult = 1 + (gameRef.level - 1)*0.25;
     if (now - lastDamageTime >= damageCooldown) {
       health -= 1*levelMult;
       lastDamageTime = now;

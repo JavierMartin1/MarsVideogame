@@ -16,7 +16,7 @@ class GameOverMenu extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '💀 Game Over',
+            '💀 Game Over 💀',
             style: GoogleFonts.unifrakturCook(
               textStyle: const TextStyle(fontSize: 35, color: Color(0xFF9B2015), fontWeight: FontWeight.bold),
             ),
@@ -28,6 +28,7 @@ class GameOverMenu extends StatelessWidget {
               textStyle: const TextStyle(fontSize: 24, color: Color(0xFF9B2015), fontWeight: FontWeight.bold),
             ),
           ),
+
           const SizedBox(height: 40),
           ElevatedButton(
             onPressed: () {
